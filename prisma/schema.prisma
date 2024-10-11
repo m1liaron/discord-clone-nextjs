@@ -14,12 +14,35 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String
-  email    String
-  password String
-  cretedAt DateTime  @default(now())
-  Message  Message[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String
+  password     String
+  cretedAt     DateTime       @default(now())
+  Message      Message[]
+  Server       Server[]
+  ServerMember ServerMember[]
+}
+
+model Server {
+  id        Int            @id @default(autoincrement())
+  name      String
+  icon      String? // Optional icon for the server
+  ownerId   Int
+  createdAt DateTime       @default(now())
+  owner     User           @relation(fields: [ownerId], references: [id])
+  members   ServerMember[]
+}
+
+model ServerMember {
+  id       Int        @id @default(autoincrement())
+  serverId Int
+  userId   Int
+  joinedAt DateTime   @default(now())
+  role     ServerRole // Role assigned to the user in the server
+  // Relations
+  user     User       @relation(fields: [userId], references: [id])
+  server   Server     @relation(fields: [serverId], references: [id])
 }
 
 model Channel {
@@ -44,4 +67,11 @@ model Message {
 enum ChannelType {
   TEXT
   VOICE
+}
+
+enum ServerRole {
+  OWNER
+  ADMIN
+  MODERATOR
+  MEMBER
 }
