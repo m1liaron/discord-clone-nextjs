@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { useDispatch, useSelector, useStore } from "react-redux";
+import { authReducer } from "./auth/authSlice";
 
 export const makeStore = () => {
     return configureStore({
-        reducer: {}
+        reducer: {
+            user: authReducer
+        }
     })
 };
 
