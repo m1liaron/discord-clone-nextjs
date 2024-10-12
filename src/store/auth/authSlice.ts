@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { register } from "./authThunk";
+import { DataStatus } from "@/common/enums/app/DataStatus";
 
 type User = {
     id: number,
@@ -9,12 +10,14 @@ type User = {
 
 export interface IAuthState {
   user: null | User,
-  isLoading: boolean
+  isLoading: boolean,
+  status: DataStatus
 }
 
 const initialState: IAuthState = {
   user: null,
   isLoading: false,
+  status: DataStatus.Idle
 };
 
 export const authSlice = createSlice({
@@ -25,13 +28,16 @@ export const authSlice = createSlice({
       builder
           .addCase(register.pending, (state: IAuthState) => {
               state.isLoading = true;
+              state.status = DataStatus.Pending;
           })
           .addCase(register.fulfilled, (state: IAuthState, action) => {
             state.isLoading = false;
+            state.status = DataStatus.Success;
             state.user = action.payload;
           })
           .addCase(register.rejected, (state: IAuthState) => {
             state.isLoading = false;
+            state.status = DataStatus.Error;
           })
     }
   });
