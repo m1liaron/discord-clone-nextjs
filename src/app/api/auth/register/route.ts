@@ -2,6 +2,7 @@ import {NextResponse} from "next/server";
 import {RegisterRequest} from "@/common/types/Auth/RegisterRequest";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt';
+import createJWToken from "@/helpers/api/createJWToken";
 
 const prisma = new PrismaClient();
 
@@ -25,10 +26,13 @@ export async function POST(req: Request) {
             },
         });
 
+        const token = await createJWToken(newUser.id, newUser.email);
+
         const { password, ...userData} = newUser;
-        return NextResponse.json(userData);
+        return NextResponse.json({ user: userData, token });
     } catch (error) {
-        console.error('Error processing request:', error);
-        return NextResponse.json({ message: error })
+        let message = 'Error during registration'
+        if (error instanceof Error) message = error.message
+        return NextResponse.json({ message: message }, { status: 500 });
     }
 }
