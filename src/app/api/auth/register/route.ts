@@ -25,7 +25,8 @@ export async function POST(req: Request) {
             },
         });
 
-        return NextResponse.json(newUser);
+        const { password, ...userData} = newUser;
+        return NextResponse.json(userData);
     } catch (error) {
         console.error('Error processing request:', error);
         return NextResponse.json({ message: error })
