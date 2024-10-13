@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
+  id           String            @id @default(uuid())
   email        String
   username     String         @unique
   displayName  String         @unique
@@ -30,7 +30,7 @@ model Server {
   id        Int            @id @default(autoincrement())
   name      String
   icon      String? // Optional icon for the server
-  ownerId   Int
+  ownerId   String
   createdAt DateTime       @default(now())
   owner     User           @relation(fields: [ownerId], references: [id])
   members   ServerMember[]
@@ -39,7 +39,7 @@ model Server {
 model ServerMember {
   id       Int        @id @default(autoincrement())
   serverId Int
-  userId   Int
+  userId   String
   joinedAt DateTime   @default(now())
   role     ServerRole // Role assigned to the user in the server
   // Relations
@@ -59,7 +59,7 @@ model Channel {
 model Message {
   id        Int      @id @default(autoincrement())
   content   String
-  userId    Int
+  userId    String
   channelId Int
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
