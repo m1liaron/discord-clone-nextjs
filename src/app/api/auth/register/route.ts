@@ -29,9 +29,10 @@ export async function POST(req: Request) {
         const token = await createJWToken(newUser.id, newUser.email);
 
         const { password, ...userData} = newUser;
-        return NextResponse.json({ userData, token });
+        return NextResponse.json({ user: userData, token });
     } catch (error) {
-        console.error('Error processing request:', error);
-        return NextResponse.json({ message: error })
+        let message = 'Error during registration'
+        if (error instanceof Error) message = error.message
+        return NextResponse.json({ message: message }, { status: 500 });
     }
 }
