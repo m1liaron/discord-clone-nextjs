@@ -1,12 +1,31 @@
 import {NextResponse} from "next/server";
+import {RegisterRequest} from "@/common/types/Auth/RegisterRequest";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from 'bcrypt';
+
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
     try {
-        const data = await req.json(); // Parse JSON body
+        const data: RegisterRequest = await req.json(); // Parse JSON body
+        const user = await prisma.user.findFirst({ where: { email: data.email } });
+        if(user) {
+            return NextResponse.json({ error: 'User already exists' }, { status: 400});
+        }
 
-        // Here, you can add your registration logic (e.g., saving user data to the database)
+        const hashedPassword = await bcrypt.hash(data.password, 10);
 
-        return NextResponse.json({ message: 'User registered successfully' })
+        const newUser = await prisma.user.create({
+            data: {
+                email: data.email,
+                username: data.username,
+                displayName: data.displayName,
+                password: hashedPassword,
+                dateOfBirth: data.dateOfBirth
+            },
+        });
+
+        return NextResponse.json(newUser);
     } catch (error) {
         console.error('Error processing request:', error);
         return NextResponse.json({ message: error })
