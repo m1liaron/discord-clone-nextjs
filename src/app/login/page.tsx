@@ -15,7 +15,7 @@ export default function Page () {
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email('Invalid email format').required('Email is required'),
-        password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+        password: Yup.string().required('Password is required'),
     });
 
 
@@ -76,8 +76,8 @@ export default function Page () {
                                 Sign Up
                             </button>
 
-                            <Link href="/login" className="text-blue-500 hover:underline text-center block">
-                                Already have an account?
+                            <Link href="/register" className="text-blue-500 hover:underline text-center block">
+                                Need an account? Register
                             </Link>
                         </Form>
                     )}
