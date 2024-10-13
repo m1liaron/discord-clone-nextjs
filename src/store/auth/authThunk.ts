@@ -1,5 +1,5 @@
 import { ApiPath } from "@/common/enums/app/ApiPath";
-import { RegisterRequest } from "@/common/types/Auth/RegisterRequest";
+import { RegisterRequest, LoginRequest } from "@/common/types/Auth/auth.types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ const register = createAsyncThunk(
 
 const login = createAsyncThunk(
     'user/login',
-    async (data) => {
+    async (data: LoginRequest) => {
         const response = await axios.post(`/api/${ApiPath.Auth}/login`, data)
         return response.data;
     }
